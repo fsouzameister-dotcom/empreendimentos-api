@@ -11,12 +11,19 @@ const empreendimentos = [
   { nome: "Iliah",            codigo: 2 }
 ];
 
-// Endpoint GET
+// Endpoint GET que recebe a MENSAGEM COMPLETA
 app.get('/codigo', (req, res) => {
-  const param = req.query.empreendimento || '';
+  const mensagem = (req.query.mensagem || '').toLowerCase().trim();
+
+  if (!mensagem) {
+    return res.status(400).json({
+      sucesso: false,
+      mensagem: 'Parâmetro "mensagem" é obrigatório'
+    });
+  }
 
   const encontrado = empreendimentos.find(e =>
-    param.toLowerCase().includes(e.nome.toLowerCase())
+    mensagem.includes(e.nome.toLowerCase())
   );
 
   if (encontrado) {
@@ -29,7 +36,7 @@ app.get('/codigo', (req, res) => {
 
   return res.status(404).json({
     sucesso: false,
-    mensagem: 'Empreendimento não encontrado'
+    mensagem: 'Empreendimento não identificado na mensagem'
   });
 });
 
